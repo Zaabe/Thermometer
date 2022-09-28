@@ -37,7 +37,6 @@ void loop() {
       delay(300);
       digitalWrite(10, LOW);
       digitalWrite(11, LOW);
-      i++;
       delay(300);
       }
     }
@@ -50,6 +49,7 @@ void loop() {
     digitalWrite(13, LOW);
     digitalWrite(12, LOW);
     digitalWrite(11, LOW);
+    digitalWrite(10, LOW);
   }
   delay(30000);
 }
