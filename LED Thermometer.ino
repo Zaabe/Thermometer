@@ -1,55 +1,72 @@
+int buzzer = 10;
+int green = 12;
+int red = 11;
+int blue = 13;
+
 void setup() {
 
   Serial.begin(9600);
-  pinMode(13, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(11, OUTPUT);
-  pinMode(10, OUTPUT);
+  pinMode(blue, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(red, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+float getVoltage(){
+  float voltage = analogRead(A0) * (5.000 / 1023.000);
+  return voltage;
+}
+
+void turnPDWOn(char led){
+  if (led == 'r'){
+    digitalWrite(blue, LOW);
+    digitalWrite(green, LOW);
+    digitalWrite(red, HIGH);
+  }
+  else if (led == 'g'){
+    digitalWrite(blue, LOW);
+    digitalWrite(green, HIGH);
+    digitalWrite(red, LOW);
+  }
+  else if (led == 'b'){
+    digitalWrite(blue, HIGH);
+    digitalWrite(green, LOW);
+    digitalWrite(red, LOW);
+  }
+  else if (led == 'f'){
+    digitalWrite(blue, LOW);
+    digitalWrite(green, LOW);
+    digitalWrite(red, LOW);
+
+    for(int i = 0; i < 10; i++){
+      digitalWrite(buzzer, HIGH);
+      delay(200);
+      digitalWrite(buzzer, LOW);
+      delay(200);
+    }
+  }
+  else{
+    exit(1);
+  }
 }
 
 void loop() {
-
-  int sensorValue = analogRead(A0);
-  float voltage = sensorValue * (5.000 / 1023.000);
-
+  float voltage = (float)getVoltage();
   Serial.println(voltage);
-  //0.038 V = 131.5 KOhm --> 21° C & 0.046 V = 108.88 KOhm --> 27° C
-  if(voltage >= 0.038 && voltage <= 0.046) {
-    digitalWrite(12, HIGH);
-    digitalWrite(11, LOW);
-    digitalWrite(13, LOW);
+  if(voltage > 0.038) {
+    if (voltage < 0.046){
+      turnPDWOn('g');
+    }
+    else if (voltage < 0.137){
+      turnPDWOn('r');
+    }
+    else if(voltage >= 0.137){
+      turnPDWOn('f');
+    }
   }
 
-  else if(voltage < 0.038) {
-    digitalWrite(13, HIGH);
-    digitalWrite(12, LOW);
-    digitalWrite(11, LOW);
+  else{
+    turnPDWOn('b');
   }
-   
-  else if(voltage > 0.046) {
-    //0.137 V = 36.42 KOhm --> 50° C
-    if(voltage > 0.137){
-      for(int i = 0; i < 10; i++){
-      digitalWrite(11, HIGH);
-      digitalWrite(10, HIGH);
-      digitalWrite(13, LOW);
-      digitalWrite(12, LOW);
-      delay(300);
-      digitalWrite(10, LOW);
-      digitalWrite(11, LOW);
-      delay(300);
-      }
-    }
-    digitalWrite(11, HIGH);
-    digitalWrite(13, LOW);
-    digitalWrite(12, LOW);
-  }
- 
-  else {
-    digitalWrite(13, LOW);
-    digitalWrite(12, LOW);
-    digitalWrite(11, LOW);
-    digitalWrite(10, LOW);
-  }
-  delay(30000);
+  delay(500);
 }

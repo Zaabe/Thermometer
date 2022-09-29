@@ -2,7 +2,7 @@
 I'm not also a good programmer so if my program is not so good and optimized I apologize.
 
 For this Arduino project you will need:
-  - x1 Arduino Uno Board
+  - x1 Arduino Uno Board (5V)
   - x1 Breadboard
   - 1x 100k NTC Thermistor
   - 1x Active Buzzer
